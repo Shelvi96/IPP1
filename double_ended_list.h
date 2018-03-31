@@ -2,33 +2,33 @@
 #define DOUBLE_ENDED_LIST_H
 #define enter printf("\n");
 
-typedef struct Node {
+typedef struct delNode {
     int val;
-    struct Node* prev;
-    struct Node* next;
-} Node;
+    struct delNode* prev;
+    struct delNode* next;
+} delNode;
 
 typedef struct deList {
 	int size;
-	Node* first;
-	Node* last;
+	delNode* first;
+	delNode* last;
 } deList;
 
-Node* setNode(int x);
-deList setList ();
+delNode* delSetNode(int x);
+deList delSetList ();
 
-void addFront (deList* l, int x);
-void addBack (deList* l, int x);
+void delAddFront (deList* l, int x);
+void delAddBack (deList* l, int x);
 
-int getFront (deList* l);
-int getBack (deList* l);
+int delGetFront (deList* l);
+int delGetBack (deList* l);
 
-void removeFront (deList* l);
-void removeBack (deList* l);
+void delRemoveFront (deList* l);
+void delRemoveBack (deList* l);
 
-void deleteList (deList* l);
+void delDeleteList (deList* l);
 
-void printFront (deList* l);
-void printBack (deList* l);
+void delPrintFront (deList* l);
+void delPrintBack (deList* l);
 
 #endif /* DOUBLE_ENDED_LIST_H */

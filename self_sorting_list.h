@@ -2,34 +2,34 @@
 #define SELF_SORTING_LIST_H
 #define enter printf("\n");
 
-typedef struct Node {
+typedef struct sslNode {
     int val;
-    struct Node* prev;
-    struct Node* next;
-} Node;
+    struct sslNode* prev;
+    struct sslNode* next;
+} sslNode;
 
 typedef struct ssList {
 	int size;
-	Node* first;
-	Node* last;
+	sslNode* first;
+	sslNode* last;
 } ssList;
 
-Node* setNode(int x);
-ssList setList ();
+sslNode* sslSetNode(int x);
+ssList sslSetList ();
 
-void add (ssList* l, int x);
+void sslAdd (ssList* l, int x);
 
-int getMax (ssList* l);
-int getMin (ssList* l);
+int sslGetMax (ssList* l);
+int sslGetMin (ssList* l);
 
-void removeFront (ssList* l);
-void removeBack (ssList* l);
+void sslRemoveFront (ssList* l);
+void sslRemoveBack (ssList* l);
 
-void removeVal (ssList* l, int x);
+void sslRemoveVal (ssList* l, int x);
 
-void deleteList (ssList* l);
+void sslDeleteList (ssList* l);
 
-void printDSC (ssList* l);
-void printASC (ssList* l);
+void sslPrintDSC (ssList* l);
+void sslPrintASC (ssList* l);
 
 #endif /* SELF_SORTING_LIST_H */

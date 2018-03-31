@@ -2,15 +2,20 @@
 #include <stdlib.h>
 #include "double_ended_list.h"
 
-Node* setNode(int x) {
-	Node* v = (Node*)malloc(sizeof(Node));
+delNode* delSetNode(int x) {
+	delNode* v = (delNode*)malloc(sizeof(delNode));
+	if (v == NULL) {
+		printf("MALLOC ERROR");
+		// free all allocs - delete tree
+		exit(1);
+	}
 	v->val = x;
 	v->prev = NULL;
 	v->next = NULL;
 	return v;
 }
 
-deList setList () {
+deList delSetList () {
 	deList l;
 	l.size = 0;
 	l.first = NULL;
@@ -18,14 +23,14 @@ deList setList () {
 	return l;
 }
 
-void addFront (deList* l, int x) {
-	Node* n = setNode(x);
-	Node* fst = l->first;
+void delAddFront (deList* l, int x) {
+	delNode* n = delSetNode(x);
+	delNode* fst = l->first;
 	if (fst == NULL) {
 		l->first = n;
 	}
 	else {
-		Node* lst = l->last;
+		delNode* lst = l->last;
 		if (lst == NULL)
 			lst = fst;
 		n->next = fst;
@@ -36,9 +41,9 @@ void addFront (deList* l, int x) {
 	l->size++;
 }
 
-void addBack (deList* l, int x) {
-	Node* n = setNode(x);
-	Node* lst = l->last;
+void delAddBack (deList* l, int x) {
+	delNode* n = delSetNode(x);
+	delNode* lst = l->last;
 	if (lst == NULL) {
 		if (l->first == NULL)
 			l->first = n;
@@ -49,7 +54,7 @@ void addBack (deList* l, int x) {
 		}
 	}
 	else {
-		Node* fst = l->first;
+		delNode* fst = l->first;
 		if (fst == NULL)
 			fst = lst;
 		n->prev = lst;
@@ -60,7 +65,7 @@ void addBack (deList* l, int x) {
 	l->size++;
 }
 
-int getFront (deList* l) {
+int delGetFront (deList* l) {
 	if (l->first == NULL) {
 		printf("ERROR: List is empty!\n");
 		return -1;
@@ -68,18 +73,18 @@ int getFront (deList* l) {
 	return (l->first)->val;
 }
 
-int getBack (deList* l) {
+int delGetBack (deList* l) {
 	if (l->last == NULL)
-		return getFront(l);
+		return delGetFront(l);
 	return (l->last)->val;
 }
 
-void removeFront (deList* l) {
+void delRemoveFront (deList* l) {
 	if (l->first == NULL) { // no elements
 		printf("ERROR: List is empty!\n");
 	}
 	else {
-		Node* n = l->first;
+		delNode* n = l->first;
 		if (n->next != NULL) { // at least 2 elements
 			(n->next)->prev = NULL;
 			l->first = n->next;
@@ -95,12 +100,12 @@ void removeFront (deList* l) {
 	}
 }
 
-void removeBack (deList* l) {
+void delRemoveBack (deList* l) {
 	if (l->last == NULL) { // at most 1 element
-		removeFront(l);
+		delRemoveFront(l);
 	}
 	else { // at least two elements
-		Node* n = l->last;
+		delNode* n = l->last;
 		(n->prev)->next = NULL;
 		l->last = n->prev;
 		if (l->size == 2) 
@@ -111,15 +116,15 @@ void removeBack (deList* l) {
 	}
 }
 
-void deleteList (deList* l) {
+void delDeleteList (deList* l) {
 	while (l->size != 0) {
-		removeFront(l);
+		delRemoveFront(l);
 	}
 	printf("List removed\n");
 }
 
-void printFront (deList* l) {
-	Node* n = l->first;
+void delPrintFront (deList* l) {
+	delNode* n = l->first;
 	if (l->size > 0) {
 		for(int i = 0; i < l->size; ++i) {
 			printf("%d ", n->val);
@@ -131,8 +136,8 @@ void printFront (deList* l) {
 		printf("Empty\n");
 }
 
-void printBack (deList* l) {
-	Node* n = l->last;
+void delPrintBack (deList* l) {
+	delNode* n = l->last;
 	if (l->size > 0) {
 		if (l->last == NULL)
 			n = l->first;
@@ -144,18 +149,4 @@ void printBack (deList* l) {
 	}
 	else
 		printf("Empty\n");
-}
-
-int main() {
-	deList l = setList();
-
-	int x;
-	for(int i = 0; i < 5; ++i) {
-		scanf("%d", &x);
-		addFront(&l, x);
-	}
-
-	deleteList(&l);
-
-	return 0;
 }

@@ -2,15 +2,20 @@
 #include <stdlib.h>
 #include "self_sorting_list.h"
 
-Node* setNode(int x) {
-	Node* v = (Node*)malloc(sizeof(Node));
+sslNode* sslSetNode(int x) {
+	sslNode* v = (sslNode*)malloc(sizeof(sslNode));
+	if (v == NULL) {
+		printf("MALLOC ERROR");
+		// free all allocs - delete tree
+		exit(1);
+	}
 	v->val = x;
 	v->prev = NULL;
 	v->next = NULL;
 	return v;
 }
 
-ssList setList () {
+ssList sslSetList () {
 	ssList l;
 	l.size = 0;
 	l.first = NULL;
@@ -18,16 +23,20 @@ ssList setList () {
 	return l;
 }
 
-void add (ssList* l, int x) { // descending list
-	Node* n = setNode(x);
-	Node* el = l->first;
-	Node* ell = l->last;
+void sslAdd (ssList* l, int x) { // descending list
+	sslNode* n = sslSetNode(x);
+	sslNode* el = l->first;
+	sslNode* ell = l->last;
 
 	if (el == NULL) { // list is empty
 		l->first = n;
 	}
 	else if (ell == NULL) { // list has only 1 element
-		if (x > el->val) { // x > head
+		if (x == el->val) {
+			printf ("ERROR: element was on the list\n");
+			l->size--;
+		}
+		else if (x > el->val) { // x > head
 			ell = el; ell->prev = n;
 			el  = n; el->next = ell;
 			l->first = el;
@@ -49,6 +58,10 @@ void add (ssList* l, int x) { // descending list
 			n->prev = ell;	
 			l->last = n;
 		}
+		else if (el->val == x) { // element was on the list
+			printf ("ERROR: element was on the list\n");
+			l->size--;
+		}	
 		else if (el == l->first) { // new maximum
 			n->next = el;
 			el->prev = n;
@@ -65,20 +78,26 @@ void add (ssList* l, int x) { // descending list
 	l->size++;
 }
 
-int getMax (ssList* l) {
+int sslGetMax (ssList* l) {
+	if (l->size == 0) {
+		printf("ERROR: List is empty\n");
+		return -1;
+	}
 	return (l->first)->val;
 }
 
-int getMin (ssList* l) {
+int sslGetMin (ssList* l) {
+	if (l->size < 2)
+		return sslGetMax(l);
 	return (l->last)->val;
 }
 
-void removeFront (ssList* l) {
+void sslRemoveFront (ssList* l) {
 	if (l->first == NULL) { // no elements
 		printf("ERROR: List is empty!\n");
 	}
 	else {
-		Node* n = l->first;
+		sslNode* n = l->first;
 		if (n->next != NULL) { // at least 2 elements
 			(n->next)->prev = NULL;
 			l->first = n->next;
@@ -94,12 +113,12 @@ void removeFront (ssList* l) {
 	}
 }
 
-void removeBack (ssList* l) {
+void sslRemoveBack (ssList* l) {
 	if (l->last == NULL) { // at most 1 element
-		removeFront(l);
+		sslRemoveFront(l);
 	}
 	else { // at least two elements
-		Node* n = l->last;
+		sslNode* n = l->last;
 		(n->prev)->next = NULL;
 		l->last = n->prev;
 		if (l->size == 2) 
@@ -110,12 +129,12 @@ void removeBack (ssList* l) {
 	}
 }
 
-void removeVal (ssList* l, int x) {
-	Node* n = l->first;
+void sslRemoveVal (ssList* l, int x) {
+	sslNode* n = l->first;
 	if ((l->first)->val == x) 
-		removeFront(l);
+		sslRemoveFront(l);
 	else if ((l->last)->val == x) 
-		removeBack(l);
+		sslRemoveBack(l);
 	else {
 		while (n != NULL && n->val > x) {
 			n = n->next;
@@ -136,46 +155,35 @@ void removeVal (ssList* l, int x) {
 	}
 }
 
-void deleteList (ssList* l) {
+void sslDeleteList (ssList* l) {
 	while (l->size != 0) {
-		removeFront(l);
+		sslRemoveFront(l);
 	}
 	printf("List removed\n");
 }
 
-void printDSC (ssList* l) { // old: printFront
-	Node* n = l->first;
-	for(int i = 0; i < l->size; ++i) {
-		printf("%d ", n->val);
-		n = n->next;
+void sslPrintDSC (ssList* l) { // old: printFront
+	if (l->size == 0)
+		printf("ERROR: list is empty\n");
+	else {
+		sslNode* n = l->first;
+		for(int i = 0; i < l->size; ++i) {
+			printf("%d ", n->val);
+			n = n->next;
+		}
+		enter
 	}
-	enter
 }
 
-void printASC (ssList* l) { // old: printBack
-	Node* n = l->last;
-	for(int i = 0; i < l->size; ++i) {
-		printf("%d ", n->val);
-		n = n->prev;
+void sslPrintASC (ssList* l) { // old: printBack
+	if (l->size < 2)
+		sslPrintDSC(l);
+	else {
+		sslNode* n = l->last;
+		for(int i = 0; i < l->size; ++i) {
+			printf("%d ", n->val);
+			n = n->prev;
+		}
+		enter
 	}
-	enter
-}
-
-int main() {
-	ssList l = setList();
-
-	int x;
-	for(int i = 0; i < 5; ++i) {
-		scanf("%d", &x);
-		add(&l, x);
-	}
-
-	printDSC(&l);
-	removeVal(&l, 5);
-	getMin(&l);
-	getMax(&l);
-	printDSC(&l);
-	deleteList(&l);
-
-	return 0;
 }
