@@ -15,7 +15,7 @@ typedef struct ssList {
 } ssList;
 
 sslNode* sslSetNode(int x);
-ssList sslSetList ();
+ssList* sslSetList ();
 
 void sslAdd (ssList* l, int x);
 

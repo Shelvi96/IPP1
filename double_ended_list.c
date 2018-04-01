@@ -15,11 +15,11 @@ delNode* delSetNode(int x) {
 	return v;
 }
 
-deList delSetList () {
-	deList l;
-	l.size = 0;
-	l.first = NULL;
-	l.last = NULL;
+deList* delSetList () {
+	deList* l = (deList*)malloc(sizeof(delNode));
+	l->size = 0;
+	l->first = NULL;
+	l->last = NULL;
 	return l;
 }
 
@@ -77,6 +77,28 @@ int delGetBack (deList* l) {
 	if (l->last == NULL)
 		return delGetFront(l);
 	return (l->last)->val;
+}
+
+void delAppend (deList* l1, deList* l2) {
+	if (l1->size > 1 && l2->size > 1 ) {
+		(l1->last)->next = l2->first;
+		(l2->first)->prev = l1->last;
+		l1->last = l2->last;
+		l1->size += l2->size;
+	}
+	else if (l1->size == 1 && l2->size == 1) {
+		(l2->first)->prev = l1->first;
+		l1->last = l2->first;
+		(l1->first)->next = l2->first;
+	}
+	else if (l1->size == 0) {
+		l1->first = l2->first;
+		l1->last = l2->last;
+		l1->size = l2->size;
+	}
+	else {;}
+	if(l2 != NULL)
+		free(l2);
 }
 
 void delRemoveFront (deList* l) {

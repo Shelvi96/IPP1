@@ -15,11 +15,11 @@ sslNode* sslSetNode(int x) {
 	return v;
 }
 
-ssList sslSetList () {
-	ssList l;
-	l.size = 0;
-	l.first = NULL;
-	l.last = NULL;
+ssList* sslSetList () {
+	ssList* l = (ssList*)malloc(sizeof(ssList));
+	l->size = 0;
+	l->first = NULL;
+	l->last = NULL;
 	return l;
 }
 

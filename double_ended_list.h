@@ -15,13 +15,15 @@ typedef struct deList {
 } deList;
 
 delNode* delSetNode(int x);
-deList delSetList ();
+deList* delSetList ();
 
 void delAddFront (deList* l, int x);
 void delAddBack (deList* l, int x);
 
 int delGetFront (deList* l);
 int delGetBack (deList* l);
+
+void delAppend (deList* l1, deList* l2);
 
 void delRemoveFront (deList* l);
 void delRemoveBack (deList* l);
