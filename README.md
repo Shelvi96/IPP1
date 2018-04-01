@@ -1,4 +1,4 @@
 # IPP1
 
-double ended list + self sorting list, no comments included, missing free when failed allocation
+double ended list + self sorting list + add print tree, no comments included, missing memory free after allocation error
 
