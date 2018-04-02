@@ -15,138 +15,150 @@ delNode* delSetNode(int x) {
 	return v;
 }
 
-deList delSetList () {
-	deList l;
-	l.size = 0;
-	l.first = NULL;
-	l.last = NULL;
+deList* delSetList () {
+	deList* l = (deList*)malloc(sizeof(delNode));
+	l->first = delSetNode(-1);
+	l->last = delSetNode(-1);
+	(l->first)->next = l->last;
+	(l->last)->prev = l->first;
 	return l;
 }
 
 void delAddFront (deList* l, int x) {
 	delNode* n = delSetNode(x);
-	delNode* fst = l->first;
-	if (fst == NULL) {
-		l->first = n;
-	}
-	else {
-		delNode* lst = l->last;
-		if (lst == NULL)
-			lst = fst;
-		n->next = fst;
-		fst->prev = n;
-		l->first = n;
-		l->last = lst;
-	}
-	l->size++;
+	n->prev = (l->first);
+	n->next = (l->first)->next;
+	((l->first)->next)->prev = n;
+	(l->first)->next = n;
 }
 
 void delAddBack (deList* l, int x) {
 	delNode* n = delSetNode(x);
-	delNode* lst = l->last;
-	if (lst == NULL) {
-		if (l->first == NULL)
-			l->first = n;
-		else {
-			n->prev = l->first;
-			l->last = n;
-			(l->first)->next = n;
-		}
-	}
-	else {
-		delNode* fst = l->first;
-		if (fst == NULL)
-			fst = lst;
-		n->prev = lst;
-		lst->next = n;
-		l->last = n;
-		l->first = fst;
-	}
-	l->size++;
+	n->prev = (l->last)->prev;
+	n->next = l->last;
+	((l->last)->prev)->next = n;
+	(l->last)->prev = n;
 }
 
 int delGetFront (deList* l) {
-	if (l->first == NULL) {
+	if ((l->first)->next == l->last) {
 		printf("ERROR: List is empty!\n");
 		return -1;
 	}
-	return (l->first)->val;
+	return ((l->first)->next)->val;
 }
 
 int delGetBack (deList* l) {
-	if (l->last == NULL)
-		return delGetFront(l);
-	return (l->last)->val;
+	if ((l->last)->prev == l->first) {
+		printf("ERROR: List is empty!\n");
+		return -1;
+	}
+	return ((l->last)->prev)->val;
+}
+
+void delSwapElementWithList (delNode* el, deList* l) {
+	if (el->val == -1)
+		printf("ERROR: cannot swap with nothing\n");
+	else if ((l->first)->next == l->last) {
+	}
+	else {
+		(el->prev)->next = (l->first)->next;
+		(el->next)->prev = (l->last)->prev;
+		((l->first)->next)->prev = el->prev;
+		((l->last)->prev)->next = el->next;
+	}
+	free(el);
+	free(l->first);
+	free(l->last);
+	free(l);
 }
 
 void delRemoveFront (deList* l) {
-	if (l->first == NULL) { // no elements
+	if ((l->first)->next == l->last) { // no elements
 		printf("ERROR: List is empty!\n");
 	}
 	else {
-		delNode* n = l->first;
-		if (n->next != NULL) { // at least 2 elements
-			(n->next)->prev = NULL;
-			l->first = n->next;
-			if (l->size == 2)
-				l->last = NULL;
-		}
-		else { // just 1 element
-			l->first = NULL;
-		}
-		l->size--;
+		delNode* n = l->first->next;
+		(n->next)->prev = l->first;
+		(l->first)->next = n->next;
 		free(n);
-		printf("Removed from the front\n");
+		// printf("Removed from the front\n");
 	}
 }
 
 void delRemoveBack (deList* l) {
-	if (l->last == NULL) { // at most 1 element
-		delRemoveFront(l);
+	if ((l->last)->prev == l->first) { // no elements
+		printf("ERROR: List is empty!\n");
 	}
-	else { // at least two elements
-		delNode* n = l->last;
-		(n->prev)->next = NULL;
-		l->last = n->prev;
-		if (l->size == 2) 
-			l->last = NULL;
-		l->size--;
+	else {
+		delNode* n = l->last->prev;
+		(n->prev)->next = l->last;
+		(l->last)->prev = n->prev;
 		free(n);
-		printf("Removed from the back\n");
+		// printf("Removed from the front\n");
 	}
 }
 
 void delDeleteList (deList* l) {
-	while (l->size != 0) {
+	delNode* n = l->first->next;
+	while (n != l->last) {
+		n = n->next;
 		delRemoveFront(l);
 	}
-	printf("List removed\n");
+	free(l->first);
+	free(l->last);
+	free(l);
+	// printf("List removed\n");
 }
 
 void delPrintFront (deList* l) {
-	delNode* n = l->first;
-	if (l->size > 0) {
-		for(int i = 0; i < l->size; ++i) {
-			printf("%d ", n->val);
-			n = n->next;
+	if ((l->first)->next == l->last)
+		printf("Empty\n");
+	else {
+		delNode* n = l->first->next;
+		while (n != l->last) {
+				printf("%d ", n->val);
+				n = n->next;
 		}
 		enter
 	}
-	else
-		printf("Empty\n");
 }
 
 void delPrintBack (deList* l) {
-	delNode* n = l->last;
-	if (l->size > 0) {
-		if (l->last == NULL)
-			n = l->first;
-		for(int i = 0; i < l->size; ++i) {
-			printf("%d ", n->val);
-			n = n->prev;
+	if ((l->last)->prev == l->first)
+		printf("Empty\n");
+	else {
+		delNode* n = l->last->prev;
+		while (n != l->first) {
+				printf("%d ", n->val);
+				n = n->prev;
 		}
 		enter
 	}
-	else
-		printf("Empty\n");
+}
+
+int main() {
+	deList* l1 = delSetList();
+	deList* l2 = delSetList();
+
+	delAddFront(l1, 6);
+	// delAddFront(l1, 4);
+	// delAddFront(l1, 8);
+	// delAddFront(l1, 1);
+
+	// delAddFront(l2, 3);
+	// delAddFront(l2, 2);
+	// delAddFront(l2, 1);
+
+	delPrintFront(l1);
+	delPrintFront(l2);
+
+	delSwapElementWithList ((l1->last)->prev, l2);
+
+	delPrintFront(l1);
+
+	delDeleteList(l1);
+	// delDeleteList(l2);
+
+	return 0;
 }

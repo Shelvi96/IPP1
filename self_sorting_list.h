@@ -9,13 +9,12 @@ typedef struct sslNode {
 } sslNode;
 
 typedef struct ssList {
-	int size;
 	sslNode* first;
 	sslNode* last;
 } ssList;
 
 sslNode* sslSetNode(int x);
-ssList sslSetList ();
+ssList* sslSetList ();
 
 void sslAdd (ssList* l, int x);
 
@@ -31,5 +30,8 @@ void sslDeleteList (ssList* l);
 
 void sslPrintDSC (ssList* l);
 void sslPrintASC (ssList* l);
+
+ssList* sslMerge (ssList* l1, ssList* l2, int k);
+ssList* sslPriorityMerge (ssList* l1, ssList* l2, int k);
 
 #endif /* SELF_SORTING_LIST_H */

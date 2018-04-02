@@ -9,19 +9,21 @@ typedef struct delNode {
 } delNode;
 
 typedef struct deList {
-	int size;
 	delNode* first;
 	delNode* last;
 } deList;
 
 delNode* delSetNode(int x);
-deList delSetList ();
+deList* delSetList ();
 
 void delAddFront (deList* l, int x);
 void delAddBack (deList* l, int x);
 
 int delGetFront (deList* l);
 int delGetBack (deList* l);
+
+void delAppend (deList* l1, deList* l2);
+void delSwapElementWithList (delNode* el, deList* l);
 
 void delRemoveFront (deList* l);
 void delRemoveBack (deList* l);
