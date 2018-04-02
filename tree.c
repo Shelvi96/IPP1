@@ -21,9 +21,10 @@ treeTree* treeSetTree () {
 	root->userID = 0;
 	root->children = delSetList();
 	root->movies = sslSetList();
+	root->parent = NULL;
 	t->node = root;
 
-	// creating array to store pointers to all users from the tree
+	// creating array to store pointers to all users from tree
 	t->users = (treeNode**)malloc(65535*sizeof(treeNode*));
 	if ((t->users) == NULL) {
 		printf("MALLOC ERROR");
@@ -53,28 +54,36 @@ void treeAddNode (treeTree* t, int id, int parentid) {
 		v->children = delSetList();
 		v->movies = sslSetList();
 		(t->users)[id] = v;	
-		delAddBack( (((t->users)[parentid]) -> children), id);
+		treeNode* parent = (t->users)[parentid];
+		delAddBack(parent->children, id);
+		v->parent = ((parent->children)->last)->prev;
 	}
 }
 
-// void treeDeleteNode (treeTree* t, int id) {
-// 	if (id == 0) {
-// 		printf ("You cannot delete user 0!");
-// 	}
-// 	else {
-// 		treeNode* n = (t->users)[id];
-// 		int parentid = (n->children)->parent;
-// 		treeNode* parent = (t->users)[parentid];
-// 		delAppend(parent->children, n->children);
-// 	}
-// }
+void treeDeleteNode (treeTree* t, int id) {
+	if (id == 0) {
+		printf ("You cannot delete user 0!\n");
+	}
+	else if ((t->users)[id] == NULL)
+		printf ("User does not exist\n");
+	else {
+		treeNode* n = (t->users)[id];
+		delNode* l = n->parent;
+
+		delSwapElementWithList (l, n->children);
+		
+		sslDeleteList(n->movies);
+		free(n);
+		(t->users)[id] = NULL;
+	}
+}
 
 void treePrintTree (treeTree* t, int root_id) {
 	treeNode* n = (t->users)[root_id];
 	printf("%d ", n->userID);
 	delPrintFront(n->children);
-	delNode* c = (n->children)->first;
-	for (int i = 0; i <(n->children)->size; ++i) {
+	delNode* c = ((n->children)->first)->next;
+	while (c != (n->children)->last) {
 		treePrintTree(t, c->val);
 		c = c->next;
 	}

@@ -11,6 +11,37 @@ int main () {
 	treeAddNode(t, 8, 0);
 	treeAddNode(t, 4, 8);
 	treeAddNode(t, 6, 8);
+	treeAddNode(t, 1, 6);
+	treeAddNode(t, 2, 6);
+	treeAddNode(t, 3, 6);
+
+	treePrintTree(t, 0);
+	printf("\n");
+
+	treeDeleteNode(t, 1);
+	treeDeleteNode(t, 2);
+	treeDeleteNode(t, 6);
+	treeDeleteNode(t, 3);
+	treeDeleteNode(t, 12);
+	treeDeleteNode(t, 10);
+	treeDeleteNode(t, 8);
+	treeDeleteNode(t, 4);
+	treeDeleteNode(t, 0);
+
+	// treeNode* n1 = (t->users)[8];
+	// printf("essa\n");
+	// delPrintFront(n1->children);
+	// printf("%d\n", (n1->parent)->val);
+	// printf("essa\n");
+
+	// n1 = (t->users)[3];
+	// printf("essa\n");
+	// delPrintFront(n1->children);
+	// printf("%d\n", (n1->parent)->val);
+	// printf("essa\n");
+	// treeDeleteNode(t, 3);
+	// treeDeleteNode(t, 4);
+
 	treePrintTree(t, 0);
 
 	treeDeleteTree(t);
