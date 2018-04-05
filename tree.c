@@ -3,19 +3,22 @@
 #include "double_ended_list.h"
 #include "self_sorting_list.h"
 #include "tree.h"
+#include "utilities.h"
 
 treeTree* treeSetTree () {
 	treeTree* t = (treeTree*)malloc(sizeof(treeTree));
 	if (t == NULL) {
-		printf("MALLOC ERROR");
-		// free all allocs - delete tree
+		// Malloc failure
+		fprintf(stderr, "ERROR\n");
+		emergencyExit();
 		exit(1);
 	}
 
 	treeNode* root = (treeNode*)malloc(sizeof(treeNode));
 	if (root == NULL) {
-		printf("MALLOC ERROR");
-		// free all allocs - delete tree
+		// Malloc failure
+		fprintf(stderr, "ERROR\n");
+		emergencyExit();
 		exit(1);
 	}
 	root->userID = 0;
@@ -27,8 +30,9 @@ treeTree* treeSetTree () {
 	// creating array to store pointers to all users from tree
 	t->users = (treeNode**)malloc(65535*sizeof(treeNode*));
 	if ((t->users) == NULL) {
-		printf("MALLOC ERROR");
-		// free all allocs - delete tree
+		// Malloc failure
+		fprintf(stderr, "ERROR\n");
+		emergencyExit();
 		exit(1);
 	}
 	for (int i = 0; i < 65535; ++i)
@@ -41,13 +45,15 @@ treeTree* treeSetTree () {
 
 void treeAddNode (treeTree* t, int id, int parentid) {
 	if ((t->users)[id] != NULL) {
-		printf ("User already in database\n");
+		// User already in database
+		fprintf(stderr, "ERROR\n");
 	}
 	else {
 		treeNode* v = (treeNode*)malloc(sizeof(treeNode));
 		if (v == NULL) {
-			printf("MALLOC ERROR");
-			// free all allocs - delete tree
+			// Malloc failure
+			fprintf(stderr, "ERROR\n");
+			emergencyExit();
 			exit(1);
 		}
 		v->userID = id;
@@ -62,10 +68,12 @@ void treeAddNode (treeTree* t, int id, int parentid) {
 
 void treeDeleteNode (treeTree* t, int id) {
 	if (id == 0) {
-		printf ("You cannot delete user 0!\n");
+		// You cannot delete root
+		fprintf(stderr, "ERROR\n");
 	}
 	else if ((t->users)[id] == NULL)
-		printf ("User does not exist\n");
+		// User does not exist
+		fprintf(stderr, "ERROR\n");
 	else {
 		treeNode* n = (t->users)[id];
 		delNode* l = n->parent;
@@ -100,23 +108,3 @@ void treeDeleteTree (treeTree* t) {
 	free(t->users);
 	free(t);
 }
-
-// int main () {
-// 	// creating array to store pointers to users
-// 	users = (treeNode**)malloc(65535*sizeof(treeNode*));
-// 	for (int i = 0; i < 65535; ++i)
-// 		users[i] = NULL;
-
-// 	int x;
-// 	scanf("%d", &x);
-
-// 	treeNode* n = treeSetNode(x);
-// 	treeNode* n1 = treeSetNode(x);
-
-// 	treePrintArr(x);
-	
-// 	treeDeleteTree(users);
-// 	free(users);
-
-// 	return 0;
-// }
