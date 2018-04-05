@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "double_ended_list.h"
+#include "self_sorting_list.h"
+#include "tree.h"
+#include "utilities.h"
 
 delNode* delSetNode(int x) {
 	delNode* v = (delNode*)malloc(sizeof(delNode));
 	if (v == NULL) {
-		printf("MALLOC ERROR");
-		// free all allocs - delete tree
+		// Malloc failure
+		fprintf(stderr, "ERROR\n");
+		emergencyExit();
 		exit(1);
 	}
 	v->val = x;
@@ -76,7 +80,7 @@ void delSwapElementWithList (delNode* el, deList* l) {
 }
 
 void delRemoveFront (deList* l) {
-	if ((l->first)->next == l->last) { // no elements
+	if ((l->first)->next == l->last) {
 		printf("ERROR: List is empty!\n");
 	}
 	else {
@@ -89,7 +93,7 @@ void delRemoveFront (deList* l) {
 }
 
 void delRemoveBack (deList* l) {
-	if ((l->last)->prev == l->first) { // no elements
+	if ((l->last)->prev == l->first) {
 		printf("ERROR: List is empty!\n");
 	}
 	else {
@@ -138,29 +142,3 @@ void delPrintBack (deList* l) {
 		enter
 	}
 }
-
-// int main() {
-// 	deList* l1 = delSetList();
-// 	deList* l2 = delSetList();
-
-// 	delAddFront(l1, 6);
-// 	delAddFront(l1, 4);
-// 	// delAddFront(l1, 8);
-// 	// delAddFront(l1, 1);
-
-// 	delAddFront(l2, 3);
-// 	delAddFront(l2, 2);
-// 	// delAddFront(l2, 1);
-
-// 	delPrintFront(l1);
-// 	delPrintFront(l2);
-
-// 	delSwapElementWithList ((l1->last)->prev, l2);
-
-// 	delPrintFront(l1);
-
-// 	delDeleteList(l1);
-// 	// delDeleteList(l2);
-
-// 	return 0;
-// }

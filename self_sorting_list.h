@@ -3,7 +3,7 @@
 #define enter printf("\n");
 
 typedef struct sslNode {
-    int val;
+    long long int val;
     struct sslNode* prev;
     struct sslNode* next;
 } sslNode;
@@ -13,18 +13,18 @@ typedef struct ssList {
 	sslNode* last;
 } ssList;
 
-sslNode* sslSetNode(int x);
+sslNode* sslSetNode(long long int x);
 ssList* sslSetList ();
 
-void sslAdd (ssList* l, int x);
+void sslAdd (ssList* l, long long int x);
 
-int sslGetMax (ssList* l);
-int sslGetMin (ssList* l);
+long long int sslGetMax (ssList* l);
+long long sslGetMin (ssList* l);
 
 void sslRemoveFront (ssList* l);
 void sslRemoveBack (ssList* l);
 
-void sslRemoveVal (ssList* l, int x);
+void sslRemoveVal (ssList* l, long long int x);
 
 void sslDeleteList (ssList* l);
 
