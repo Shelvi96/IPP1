@@ -1,79 +1,97 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "double_ended_list.h"
 #include "self_sorting_list.h"
 #include "tree.h"
-#include "utilities.h"
+#include "utl.h"
+#define MAX_USERS 65536
 
 treeTree* treeSetTree () {
 	treeTree* t = (treeTree*)malloc(sizeof(treeTree));
+
 	if (t == NULL) {
 		// Malloc failure
-		fprintf(stderr, "ERROR\n");
-		emergencyExit();
+		fprintf(stderr, "MALLOC ERROR\n");
 		exit(1);
 	}
 
 	treeNode* root = (treeNode*)malloc(sizeof(treeNode));
+
 	if (root == NULL) {
 		// Malloc failure
-		fprintf(stderr, "ERROR\n");
+		fprintf(stderr, "MALLOC ERROR\n");
 		emergencyExit();
 		exit(1);
 	}
+
 	root->userID = 0;
 	root->children = delSetList();
 	root->movies = sslSetList();
 	root->parent = NULL;
 	t->node = root;
 
-	// creating array to store pointers to all users from tree
-	t->users = (treeNode**)malloc(65535*sizeof(treeNode*));
+	// Tablica przechowująca wskaźniki do wszystkich użytkowników
+	t->users = (treeNode**)malloc(MAX_USERS*sizeof(treeNode*));
+
 	if ((t->users) == NULL) {
 		// Malloc failure
-		fprintf(stderr, "ERROR\n");
+		fprintf(stderr, "MALLOC ERROR\n");
 		emergencyExit();
 		exit(1);
 	}
-	for (int i = 0; i < 65535; ++i)
+
+	for (int i = 0; i < MAX_USERS; ++i) {
 		(t->users)[i] = NULL;
+	}
 
 	(t->users)[0] = root;
 
 	return t;
 }
 
-void treeAddNode (treeTree* t, int id, int parentid) {
+bool treeAddNode (treeTree* t, int parent_id, int id) {
 	if ((t->users)[id] != NULL) {
-		// User already in database
-		fprintf(stderr, "ERROR\n");
+		// Dodano już takiego użytkownika
+		return false;
+	}
+	else if ((t->users)[parent_id] == NULL) {
+		// Nie istnieje użytkownik, który miał stworzyć potomka
+		return false;
 	}
 	else {
 		treeNode* v = (treeNode*)malloc(sizeof(treeNode));
+
 		if (v == NULL) {
 			// Malloc failure
-			fprintf(stderr, "ERROR\n");
+			fprintf(stderr, "MALLOC ERROR\n");
 			emergencyExit();
 			exit(1);
 		}
+
 		v->userID = id;
 		v->children = delSetList();
 		v->movies = sslSetList();
+
 		(t->users)[id] = v;	
-		treeNode* parent = (t->users)[parentid];
+		treeNode* parent = (t->users)[parent_id];
+
 		delAddBack(parent->children, id);
+
 		v->parent = ((parent->children)->last)->prev;
 	}
+
+	return true;
 }
 
-void treeDeleteNode (treeTree* t, int id) {
+bool treeDeleteNode (treeTree* t, int id) {
 	if (id == 0) {
-		// You cannot delete root
-		fprintf(stderr, "ERROR\n");
+		// Nie można usunąć korzenia drzewa!
+		return false;
 	}
 	else if ((t->users)[id] == NULL)
-		// User does not exist
-		fprintf(stderr, "ERROR\n");
+		// Użytkownik zgłoszony do usunięcia nie istnieje
+		return false;
 	else {
 		treeNode* n = (t->users)[id];
 		delNode* l = n->parent;
@@ -84,13 +102,18 @@ void treeDeleteNode (treeTree* t, int id) {
 		free(n);
 		(t->users)[id] = NULL;
 	}
+
+	return true;
 }
 
 void treePrintTree (treeTree* t, int root_id) {
 	treeNode* n = (t->users)[root_id];
+
 	printf("%d ", n->userID);
 	delPrintFront(n->children);
+
 	delNode* c = ((n->children)->first)->next;
+
 	while (c != (n->children)->last) {
 		treePrintTree(t, c->val);
 		c = c->next;
@@ -98,13 +121,14 @@ void treePrintTree (treeTree* t, int root_id) {
 }
 
 void treeDeleteTree (treeTree* t) {
-	for (int i = 0; i < 65535; ++i) {
+	for (int i = 0; i < MAX_USERS; ++i) {
 		if (t->users[i] != NULL) {
 			delDeleteList((t->users)[i]->children);
 			sslDeleteList((t->users)[i]->movies);
 			free((t->users)[i]);
 		}
 	}
+	
 	free(t->users);
 	free(t);
 }

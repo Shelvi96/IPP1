@@ -1,6 +1,5 @@
 #ifndef SELF_SORTING_LIST_H
 #define SELF_SORTING_LIST_H
-#define enter printf("\n");
 
 typedef struct sslNode {
     long long int val;
@@ -16,7 +15,7 @@ typedef struct ssList {
 sslNode* sslSetNode(long long int x);
 ssList* sslSetList ();
 
-void sslAdd (ssList* l, long long int x);
+bool sslAdd (ssList* l, long long int x);
 
 long long int sslGetMax (ssList* l);
 long long sslGetMin (ssList* l);
@@ -24,7 +23,7 @@ long long sslGetMin (ssList* l);
 void sslRemoveFront (ssList* l);
 void sslRemoveBack (ssList* l);
 
-void sslRemoveVal (ssList* l, long long int x);
+bool sslRemoveVal (ssList* l, long long int x);
 
 void sslDeleteList (ssList* l);
 

@@ -15,11 +15,11 @@ typedef struct treeTree {
 
 treeTree* treeSetTree ();
 
-void treeAddNode (treeTree* t, int id, int parentid);
+bool treeAddNode (treeTree* t, int parent_id, int id);
 
 void treePrintTree (treeTree* t, int root_id);
 
-void treeDeleteNode (treeTree* t, int id);
+bool treeDeleteNode (treeTree* t, int id);
 void treeDeleteTree (treeTree* t);
 
 #endif /* TREE_H */

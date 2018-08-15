@@ -1,6 +1,5 @@
 #ifndef DOUBLE_ENDED_LIST_H
 #define DOUBLE_ENDED_LIST_H
-#define enter printf("\n");
 
 typedef struct delNode {
     int val;
